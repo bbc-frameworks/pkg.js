@@ -172,7 +172,7 @@ var pkg = function () {
         var dependencies = (arguments.length > 2) ? arguments[1] : [],
             code         = (arguments.length > 2) ? arguments[2] : arguments[1],
             loader       = this;
-        this.load(dependencies, function () {
+        return this.load(dependencies, function () {
             loader.definePackage(name, code.apply(null, arguments));
         });
     };
@@ -205,6 +205,7 @@ var pkg = function () {
             }
             return then.apply(null, mods);
         });
+        return loaded;
     };
 
     var loader = new Loader();
