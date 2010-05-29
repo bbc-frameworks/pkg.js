@@ -139,6 +139,9 @@ var pkg = function () {
     };
 
     Loader.prototype._nodeLoad = function (name, finished) {
+        if (context.document) {
+            throw new Error('attempt to load node.js package "' + name + ': in a browser');
+        }
         require.async(name, function (err, ns) {
             if (err) {
                 throw new Error('could not load node package ' + name + ' - ' + err);
