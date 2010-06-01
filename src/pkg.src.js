@@ -176,7 +176,7 @@ var pkg = function () {
             code         = (arguments.length > 2) ? arguments[2] : arguments[1],
             loader       = this;
         return this.load(dependencies, function () {
-            loader.definePackage(name, code.apply(null, arguments));
+            loader.definePackage(name, code ? code.apply(null, arguments) : null);
         });
     };
 
