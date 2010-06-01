@@ -206,7 +206,7 @@ var pkg = function () {
                     mods = [mods]
                 }
             }
-            return then.apply(null, mods);
+            return then ? then.apply(null, mods) : null;
         });
         return loaded;
     };
