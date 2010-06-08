@@ -79,10 +79,6 @@ var pkg = function () {
         else {
             for (var i = 1; i <= namespaces; i++) {
                 var prefix = arguments[i];
-                /*if (! /^\w+(?:_\w+)*$/.test(prefix)) {
-                    throw new Error('invalid namespace prefix "' + prefix + '" passed to pkg.lib');
-                }
-                */
                 var quoted = prefix.replace(/([^\w])/g, '\\$1');
                 this.paths.push([
                     new RegExp('^' + prefix + '(?:_|$)'),
@@ -144,7 +140,8 @@ var pkg = function () {
         }
         require.async(name, function (err, ns) {
             if (err) {
-                throw new Error('could not load node package ' + name + ' - ' + err);
+                // TODO throw or reject?
+                finished.reject(new Error('could not load node package ' + name + ' - ' + err));
             }
             finished.resolve(ns);
         });
