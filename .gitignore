@@ -3,3 +3,6 @@ src/pkg.js
 BUILD
 RPMS
 SRPMS
+lib/fs-promise.js
+lib/pkg/node.js
+src/pkg.debug.js
