@@ -12,7 +12,7 @@ lib/pkg/node.js: lib/pkg/node.debug.js
 	java -jar ext/yuicompressor.jar --type js lib/pkg/node.debug.js > lib/pkg/node.js
 
 lib/fs-promise.js: lib/fs-promise.debug.js
-	java -jar ext/yuicompressor.jar --type js lib/fs-promise.js > lib/fs-promise.js
+	java -jar ext/yuicompressor.jar --type js lib/fs-promise.debug.js > lib/fs-promise.js
 
 ext/node-promise/promise.js:
 	git submodule init && \
