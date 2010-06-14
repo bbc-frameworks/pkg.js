@@ -20,7 +20,7 @@ var pkg = function () {
         finished.resolve(promise);
         this.packages = { promise: { ns: promise, finished: finished }  };
         if (! context.document) {
-            this.lib(__dirname + '/fs', 'fs-promise');
+            this.lib(__dirname.replace(/\/src$/, '') + '/lib', 'pkg', 'fs-promise');
         }
     };
 
@@ -89,6 +89,29 @@ var pkg = function () {
         }
     };
 
+    if (! context.document) {
+        Loader.prototype.setupProjectPaths = function (name, root) {
+            var loader = this;
+            return this.load(['pkg_node']).thenAll(function (node) {
+                node.setupNodePaths();
+                loader._pathResolver = new node.createPathResolver(loader);
+                return loader._pathResolver.setupProjectPaths(name, root);
+            });
+        };
+
+        Loader.prototype.project = function (name) {
+            return this._pathResolver.project(name);
+        };
+
+        Loader.prototype.pathResolver = function () {
+            return this._pathResolver;
+        };
+
+        Loader.prototype.pkgDir = function () {
+            return __dirname;
+        };
+    }
+
     Loader.prototype._nodePath = function (name) {
         return name;
     };
@@ -111,6 +134,9 @@ var pkg = function () {
     Loader.prototype.definePackage = function (name, ns) {
         if (! (name in this.packages)) {
             this.packages[name] = {};
+        }
+        if (this.packages[name].ns) {
+            throw new Error('the package "' + name + '" has already been defined');
         }
         this.packages[name].ns = ns;
         if ('finished' in this.packages[name]) {
@@ -140,8 +166,7 @@ var pkg = function () {
         }
         require.async(name, function (err, ns) {
             if (err) {
-                // TODO throw or reject?
-                finished.reject(new Error('could not load node package ' + name + ' - ' + err));
+                throw new Error('could not load node package ' + name + ' - ' + err);
             }
             finished.resolve(ns);
         });
@@ -154,7 +179,7 @@ var pkg = function () {
 
         var match = name.match(/^(\w+):(.+)$/),
             finished  = new promise.Promise();
-    
+
         if (match) {
             if (! this['_' + match[1] + 'Load']) {
                 throw new Error('unknown loader prefix "' + match[1] + ':" in module name "' + name + '"');
@@ -173,7 +198,7 @@ var pkg = function () {
             code         = (arguments.length > 2) ? arguments[2] : arguments[1],
             loader       = this;
         return this.load(dependencies, function () {
-            loader.definePackage(name, code ? code.apply(null, arguments) : null);
+            return loader.definePackage(name, code ? code.apply(null, arguments) : null);
         });
     };
 
