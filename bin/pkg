@@ -1,6 +1,6 @@
 #!/bin/env node
 
-require('../src/pkg.debug');
+require('../src/pkg');
 
 pkg.setupProjectPaths('pkg.js', __dirname.replace(/\/bin$/, '')).then(function () {
     pkg.load(['pkg_cli'], function (cli) {
