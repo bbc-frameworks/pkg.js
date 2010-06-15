@@ -144,19 +144,24 @@ var pkg = function () {
         }
     };
 
-    Loader.prototype._initiateBrowserLoad = function (path) {
+    Loader.prototype._initiateBrowserLoad = function (path, finished) {
+        // TODO detect error and reject finished
         var scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'text/javascript');
         scriptTag.setAttribute('src', path);
         document.getElementsByTagName('head')[0].appendChild(scriptTag);
     };
 
-    Loader.prototype._initiateLoad = function (path) {
+    Loader.prototype._initiateLoad = function (path, finished) {
         if (context.document) {
-            this._initiateBrowserLoad(path);
+            this._initiateBrowserLoad(path, finished);
         }
         else {
-            require.async(path);
+            require.async(path, function (err) {
+                if (err) {
+                    finished.reject(new Error('error loading ' + path + ':\n' + err));
+                }
+            });
         }
     };
 
@@ -187,7 +192,7 @@ var pkg = function () {
             this['_' + match[1] + 'Load'].call(this, match[2], finished);
         }
         else {
-            this._initiateLoad(this._path(name));
+            this._initiateLoad(this._path(name), finished);
         }
         this.packages[name] = { finished: finished };
         return finished;

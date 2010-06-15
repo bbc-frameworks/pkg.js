@@ -1,10 +1,14 @@
 {
     "name"             : "pkg.js",
     "libraryNamespace" : "pkg",
+    "description"      : "JavaScript Package System",
     "version"          : "0.1.0",
     "depends"          : {
-        "spectrum.js" : [ ">=", "0.1.0" ],
-        "swipe.js"    : [ ">=", "0.1.0" ]
-    }
+        "spectrum.js"  : [ ">=", "0.1.0" ],
+        "swipe.js"     : [ ">=", "0.1.0" ]
+    },
+    "vendor"           : "British Broadcasting Corporation",
+    "build"            : "make",
+    "nodeModlues"      : [ "pkg" ]
 }
 

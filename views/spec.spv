@@ -10,7 +10,9 @@ Vendor: <%= this.params.vendor %>
 License: <%= this.params.license %>
 Summary: <%= this.params.summary %>
 URL: <%= this.params.link %>
+: if (this.params.requires) {
 Requires: <%= this.params.requires %>
+: }
 Conflicts: none
 BuildRoot: %{_topdir}/BUILD/target
 BuildArch: noarch
