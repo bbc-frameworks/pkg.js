@@ -22,6 +22,7 @@ var pkg = function () {
         if (! context.document) {
             this.lib(__dirname.replace(/\/src$/, '') + '/lib', 'pkg', 'fs-promise');
         }
+        this._failedLoads = {};
     };
 
     Loader.prototype.promise = promise;
@@ -145,7 +146,7 @@ var pkg = function () {
     };
 
     Loader.prototype._initiateBrowserLoad = function (path, finished) {
-        // TODO detect error and reject finished
+        // TODO detect error, reject finished
         var scriptTag = document.createElement('script');
         scriptTag.setAttribute('type', 'text/javascript');
         scriptTag.setAttribute('src', path);
@@ -185,16 +186,16 @@ var pkg = function () {
         var match = name.match(/^(\w+):(.+)$/),
             finished  = new promise.Promise();
 
+        if (match && ! this['_' + match[1] + 'Load']) {
+            throw new Error('unknown loader prefix "' + match[1] + ':" in module name "' + name + '"');
+        }
+        this.packages[name] = { finished: finished };
         if (match) {
-            if (! this['_' + match[1] + 'Load']) {
-                throw new Error('unknown loader prefix "' + match[1] + ':" in module name "' + name + '"');
-            }
             this['_' + match[1] + 'Load'].call(this, match[2], finished);
         }
         else {
             this._initiateLoad(this._path(name), finished);
         }
-        this.packages[name] = { finished: finished };
         return finished;
     };
 
