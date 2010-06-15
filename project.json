@@ -1,0 +1,10 @@
+{
+    "name"             : "pkg.js",
+    "libraryNamespace" : "pkg",
+    "version"          : "0.1.0",
+    "depends"          : {
+        "spectrum.js" : [ ">=", "0.1.0" ],
+        "swipe.js"    : [ ">=", "0.1.0" ]
+    }
+}
+

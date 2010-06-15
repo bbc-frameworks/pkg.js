@@ -1,0 +1,27 @@
+%global debug_package %{nil}
+
+Name: <%= this.params.name %>
+Version: %{version}
+Release: %{release}
+Group: <%= this.params.group %>
+Distribution: <%= this.params.distribution %>
+Packager: <%= this.params.packager %>
+Vendor: <%= this.params.vendor %>
+License: <%= this.params.license %>
+Summary: <%= this.params.summary %>
+URL: <%= this.params.link %>
+Requires: <%= this.params.requires %>
+Conflicts: none
+BuildRoot: %{_topdir}/BUILD/target
+BuildArch: noarch
+
+%description
+<%= this.params.description %>
+
+%install
+
+%files
+%defattr(-,root,root)
+<%= this.params.files %>
+
+

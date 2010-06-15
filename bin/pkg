@@ -1,0 +1,12 @@
+#!/bin/env node
+
+require('../src/pkg.debug');
+
+pkg.setupProjectPaths('pkg.js', __dirname.replace(/\/bin$/, '')).then(function () {
+    pkg.load(['pkg_cli'], function (cli) {
+        var args = process.argv;
+        args.shift(); // get rid of node
+        args.shift(); // get rid of pkg
+        cli.run(args, process.env);
+    });
+});
