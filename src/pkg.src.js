@@ -166,7 +166,7 @@ var pkg = function () {
                 }
                 called = true;
                 if (err) {
-                    finished.reject(new Error('error loading ' + path + ':\n' + err));
+                    finished.reject(err);
                 }
             });
         }
@@ -224,14 +224,33 @@ var pkg = function () {
         var loader = this,
             loaded;
         if (mods instanceof Array) {
+            loaded = new promise.Promise();
             if (mods.length == 0) {
-                loaded = new promise.Promise();
                 loaded.resolve([]);
             }
             else {
-                loaded = promise.all(mods.map(function (name) {
+                promise.all(mods.map(function (name) {
                     return loader.loadPackage(name);
-                }));
+                })).then(function (res) {
+                    var failed = [], succeeded = [];
+                    for (var i = 0, l = res.length; i < l; i++) {
+                        if (res[i] instanceof Error) {
+                            failed.push(res[i]);
+                        }
+                        else {
+                            succeeded.push(res[i]);
+                        }
+                    }
+                    if (failed.length > 0) {
+                        var err = new Error(failed.map(function (err) { return err.message; }).join(', '));
+                        err.failed = failed;
+                        err.succeeded = succeeded;
+                        loaded.reject(err);
+                    }
+                    else {
+                        loaded.resolve(res);
+                    }
+                });
             }
         }
         else {
