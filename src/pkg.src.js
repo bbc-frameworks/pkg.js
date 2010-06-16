@@ -158,7 +158,13 @@ var pkg = function () {
             this._initiateBrowserLoad(path, finished);
         }
         else {
+            var called = false;
             require.async(path, function (err) {
+                // work around weird node bug
+                if (called) {
+                    return;
+                }
+                called = true;
                 if (err) {
                     finished.reject(new Error('error loading ' + path + ':\n' + err));
                 }
@@ -170,7 +176,13 @@ var pkg = function () {
         if (context.document) {
             throw new Error('attempt to load node.js package "' + name + ': in a browser');
         }
+        var called = false;
         require.async(name, function (err, ns) {
+            // work around weird node bug
+            if (called) {
+                return;
+            }
+            called = true;
             if (err) {
                 throw new Error('could not load node package ' + name + ' - ' + err);
             }
