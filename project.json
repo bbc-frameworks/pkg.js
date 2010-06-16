@@ -9,6 +9,6 @@
     },
     "vendor"           : "British Broadcasting Corporation",
     "build"            : "make",
-    "nodeModlues"      : [ "pkg" ]
+    "nodeModules"      : [ "pkg" ]
 }
 
