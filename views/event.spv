@@ -1,0 +1,7 @@
+description "<%= this.params.description %>"
+author      "<%= this.params.author %>"
+
+start on startup
+stop on shutdown
+exec <%= this.params.executable %> > /dev/null &
+respawn

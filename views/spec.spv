@@ -21,7 +21,9 @@ BuildArch: noarch
 <%= this.params.description %>
 
 %install
-chmod +x target/usr/share/*/bin/*
+if [ "$(ls usr/share/*/bin/*)" ]; then
+    chmod +x usr/share/*/bin/*
+fi
 %files
 %defattr(-,root,root)
 <%= this.params.files %>
