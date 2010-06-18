@@ -10,6 +10,22 @@ var pkg = function () {
         return exports;
     })({});
 
+    // taken from https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Objects/Array/Map
+    function map (fun) {
+        var len = this.length >>> 0;
+        if (typeof fun != "function") {
+            throw new TypeError();
+        }
+        var res = new Array(len);
+        var thisp = arguments[1];
+        for (var i = 0; i < len; i++) {
+             if (i in this) {
+                  res[i] = fun.call(thisp, this[i], i, this);
+             }
+        }
+        return res;
+    }
+
     var Package = function (name) {
         this.name = name;
     };
@@ -229,7 +245,7 @@ var pkg = function () {
                 loaded.resolve([]);
             }
             else {
-                promise.all(mods.map(function (name) {
+                promise.all(map.call(mods, function (name) {
                     return loader.loadPackage(name);
                 })).then(function (res) {
                     var failed = [], succeeded = [];
@@ -242,7 +258,7 @@ var pkg = function () {
                         }
                     }
                     if (failed.length > 0) {
-                        var err = new Error(failed.map(function (err) { return err.message; }).join(', '));
+                        var err = new Error(map.call(failed, function (err) { return err.message; }).join(', '));
                         err.failed = failed;
                         err.succeeded = succeeded;
                         loaded.reject(err);
